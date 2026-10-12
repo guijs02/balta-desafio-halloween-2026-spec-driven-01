@@ -1,28 +1,34 @@
 <img width="100%" alt="Halloween 2026" src="https://baltaio.blob.core.windows.net/static/images/v4/challenges/halloween-2026/banner.jpg" />
 
-## 🎃 Halloween - Desafio 1
+## Halloween 2026 — Desafio 1
 
-Oi, eu sou o [seu nome aqui] e este é o espaço onde compartilho minha jornada de aprendizado durante o desafio **Halloween 2026**, realizado pelo [balta.io](https://balta.io). 👻
+API didática para gerar senhas fortes e recuperá-las por GUID. A implementação segue a especificação em `specs/spec.md` e está organizada em projetos .NET 10 dentro de `src`.
 
-Aqui você vai encontrar projetos, exercícios e códigos que estou desenvolvendo durante o desafio.
+### Executar a API
 
-### Sobre este desafio
-Neste desafio o objetivo é consolidar os fundamentos do Spec Driven Development, criando uma constituição, especificação, planejamento e tarefas manualmente para serem implementadas pela IA posteriormente.
+Na raiz do repositório:
 
-#### O que foi implementado
-- [Listar detalhes da implementação]
+```powershell
+dotnet run --project src/Api/Api.csproj
+```
 
-Neste processo eu aprendi:
-* ✅
+A API cria o banco SQLite `passwords.db` no diretório do projeto da API. A string de conexão pode ser substituída pela configuração `ConnectionStrings:Passwords`.
 
-## Bagde
-<img src="https://baltaio.blob.core.windows.net/static/images/v4/challenges/halloween-2026/01.png" width="200" />
+### Endpoints
 
-## Problema
---
+- `POST /passwords` — gera e persiste uma senha; retorna `id` e `password` após gravar com sucesso.
+- `GET /passwords/{id}` — recupera a senha pelo GUID. GUID malformado ou ausente retorna HTTP 400 com ProblemDetails; GUID válido não encontrado retorna HTTP 404.
 
-## Sobre o Halloween 2026
-O desafio **Halloween 2026** consiste em implementar implementar o modelo Spec Driven Development de ponta a ponta, criando apps completas com IA.
+Senhas geradas têm pelo menos 16 caracteres, incluem pontuação ASCII imprimível e não contêm espaços em branco. As gerações recebem GUIDs próprios e registros anteriores permanecem consultáveis.
 
-### Veja meu progresso no desafio
-[Incluir link para o repositório central]
+### Testes
+
+```powershell
+dotnet test src/Passwords.slnx
+```
+
+Os testes unitários cobrem as regras do domínio e do serviço. Os testes de integração hospedam a API com um banco SQLite em memória independente por teste.
+
+### Limitações didáticas
+
+As senhas são armazenadas sem criptografia, conforme o escopo da especificação. Esta implementação é exclusivamente didática e não é adequada para armazenar senhas reais ou uso em produção.
